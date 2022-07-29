@@ -20,25 +20,35 @@ augmentation = iaa.Sequential([
     iaa.Flipud(0.5),  #Vertical Flip
 
     # 2. Affine
-    iaa.Affine(translate_percent={"x": (-0.2,0.2), "y": (-0.2,0.2)}, #translate percent= black bar ekliyor
-               rotate=(-30,30),#rotate ediyor(döndürme)
-               scale=(0.5,1.5) #Zoom out and in
+    iaa.Affine(translate_percent={"x": (-0.2, 0.2), "y": (-0.2, 0.2)}, #translate percent= black bar ekliyor
+               rotate=(-30, 30),#rotate ediyor(döndürme)
+               scale=(0.5, 1.5) #Zoom out and in
                ),
 
     # 3. Multiply (Channels) #
     # brighter or darker
-    iaa.Multiply((0.8,1.2)),
+    iaa.Multiply((0.8, 1.2)),
 
+    # 4. Linearcontrast (Contrast)
+    iaa.LinearContrast((0.6, 1.4)),
+
+    # Perform methods below only sometimes
+    iaa.Sometimes(0.5,
+        # 5. GaussianBlur (Blur)
+        iaa.GaussianBlur((0.0, 3.0))
+                  )
 
 
 ])
-#Apply augmentation
-augmentation_images = augmentation(images=images)
+
 
 # 3. Show Augmented images
-for img in augmentation_images:
-    cv2.imshow("Image", img)
-    cv2.waitKey(0)
+while True: #İnfinite Loop
+    # Apply augmentation
+    augmentation_images = augmentation(images=images)
+    for img in augmentation_images:
+        cv2.imshow("Image", img)
+        cv2.waitKey(0)
 
 
 
